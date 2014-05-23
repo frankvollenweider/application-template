@@ -1,8 +1,5 @@
 <?php
 
-define('VIEW_API', 'api');
-define('VIEW_INDEX', 'index');
-
 /**
  * Get a configuration variable by path.
  * 

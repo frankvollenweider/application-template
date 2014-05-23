@@ -52,3 +52,5 @@ foreach (glob(APP . '/modules/*', GLOB_ONLYDIR) as $dir) {
 file_put_contents(CACHE . 'app.js', $core . $output);
 header("Content-Type: text/javascript; charset=utf-8");
 echo $core . $output;
+
+?>

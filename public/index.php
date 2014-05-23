@@ -5,6 +5,9 @@ require getcwd() . '/../application/library/bootstrap.php';
 // start session
 session_start();
 
+define('VIEW_INDEX', 'index');
+define('VIEW_API', 'api');
+
 // define route
 $route = str_replace('?' . $_SERVER['QUERY_STRING'], '', explode('/', $_SERVER['REQUEST_URI']));
 if ($route[1] == "") { $route[1] = VIEW_INDEX; }
