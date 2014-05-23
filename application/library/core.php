@@ -13,7 +13,7 @@ function config($var, $value = null) {
     global $config;
     if ($config == null) {
         require CONFIG . 'config.php';
-        require CONFIG . 'config-private.php';
+        is_file(CONFIG . 'config-private.php') ? include(CONFIG . 'config-private.php') : null;
     }
     return isset($config[$var]) ? $config[$var] : $value;
 }

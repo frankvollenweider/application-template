@@ -7,8 +7,8 @@ define('CACHE', dirname(__FILE__) . '/');
 require dirname(__FILE__) . '/../../../application/library/bootstrap.php';
 
 // initialize
-$core = file_get_contents(BASE . '/js/core/jquery.js');
-$core .= file_get_contents(BASE . '/js/core/terrific.js');
+$core = file_get_contents(BASE . '/js/core/jquery-1.11.1.min.js');
+$core .= file_get_contents(BASE . '/js/core/terrific-2.0.2.min.js');
 
 $output = '';
 

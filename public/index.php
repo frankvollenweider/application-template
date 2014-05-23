@@ -1,6 +1,6 @@
 <?php
 
-require getcwd() . '/../application/library/bootstrap.php';
+require dirname(__FILE__) . '/../application/library/bootstrap.php';
 
 // start session
 session_start();
