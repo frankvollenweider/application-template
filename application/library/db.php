@@ -4,7 +4,9 @@
  * Database.
  */
 class Database {
-    
+
+    private $debug = false;
+
     private $database;
     private $host = 'localhost';
     private $username = 'root';
@@ -74,6 +76,7 @@ class Database {
      * @return mysqli result set
      */
     public function query($sql, $silent = false) {
+        if ($this->debug) { $this->logQuery($sql); }
         $this->connect();
         $this->querycount++;
         $result = $this->database->query($sql);
@@ -92,7 +95,8 @@ class Database {
      * @return array
      */
     public function data($query, $keycolumn = null, $iskeycolumnunique = true, $silent = false) {
-    	$result = $this->query($query, $silent);
+        if ($this->debug) { $this->logQuery($sql); }
+        $result = $this->query($query, $silent);
     	if ($result == null) {
     		return null;
     	}
@@ -113,13 +117,14 @@ class Database {
     }
     
     public function single($query) {
-    	$data = $this->data($query);
+        if ($this->debug) { $this->logQuery($sql); }
+        $data = $this->data($query);
     	if (sizeof($data) > 0) {
     	   return $data[0];
     	}
     	return null;
     }
-    
+
     public function insert($table, $data) {
     	
     	$query = 'INSERT INTO `' . $table . '` (';
@@ -147,6 +152,7 @@ class Database {
         	}
         }
         $query .= ')';
+        if ($this->debug) { $this->logQuery($query); }
         $this->query($query);
         return $this->database->insert_id;
     }
@@ -166,21 +172,28 @@ class Database {
                 $query .= ',';
             }
             if ($value == null) {
-                $query .= '`' . $column . '`=NULL';
+                $query .= '`' . $column . '` = NULL';
             } else {
-            	$query .= '`' . $column . '`=\'' . addslashes($value) . '\'';
+            	$query .= '`' . $column . '` = \'' . addslashes($value) . '\'';
             }
             $column_count++;
         }
-        $query .= ' WHERE ';
-        $column_count = 0;
-        while(list($column, $value) = each($condition)) {
-           if ($column_count > 0) {
-                $query .= ' AND ';
+        if (!empty($condition)) {
+            $query .= ' WHERE ';
+            $column_count = 0;
+            while(list($column, $value) = each($condition)) {
+                if ($column_count > 0) {
+                    $query .= ' AND ';
+                }
+                if ($value === NULL) {
+                    $query .= '`' . $column . '` IS NULL';
+                } else {
+                    $query .= '`' . $column . '` = \'' . addslashes($value) . '\'';
+                }
+                $column_count++;
             }
-            $query .= '`' . $column . '`=\'' . addslashes($value) . '\'';
-            $column_count++;
         }
+        if ($this->debug) { $this->logQuery($query); }
         $this->query($query);
     }
     
@@ -195,6 +208,7 @@ class Database {
     		$count++;
     	}
     	$query .= " LIMIT 1";
+        if ($this->debug) { $this->logQuery($query); }
     	$result = $this->data($query);
     	return (sizeof($result) > 0);
     }
@@ -209,6 +223,7 @@ class Database {
             $query .= "`" . $column . "` = '" . $value . "'";
             $count++;
         }
+        if ($this->debug) { $this->logQuery($query); }
         $this->query($query);
     }
     
@@ -263,7 +278,11 @@ class Database {
             $this->database->close();
         }
     }
-    
+
+    function logQuery($query) {
+        error_log("Query: " . $query);
+    }
+
 }
 
 ?>
