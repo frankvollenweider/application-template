@@ -27,6 +27,9 @@ $config['application.url.error'] = '/error';
 
 // Security
 $config['security.password.hash'] = 'ZvN3uEV0ACWvqw';
+$config['security.user.provider'] = 'default';
+$config['security.authentication.provider'] = 'default';
+$config['security.authorization.provider'] = 'default';
 
 // Cache
 $config['cache.css.enabled'] = false;
