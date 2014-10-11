@@ -1,17 +1,18 @@
 <?php
 
-define('API_EXAMPLE', 'example');
+$apiName = isset($route[2]) ? $route[2] : "";
+$apiAction = isset($route[3]) ? $route[3] : "";
 
-$api = $route[2];
+checkUserAllowedForApiAction($apiName, $apiAction);
+require LIBRARY . 'api/' . $apiName . '.php';
 
-switch ($api) {
-    case API_EXAMPLE:
-        $action = $api . '.' . $route[3];
-        if (!is_file(LIBRARY . 'api/' . strtolower($api) . '.php')) {
-            die('api not available');
-        }
-        require LIBRARY . 'api/' . strtolower($api) . '.php';
-        break;
+if (is_callable($apiAction)) {
+    $params = array();
+    $routeIndex = 4;
+    $paramsIndex = 0;
+    while (isset($route[$routeIndex])) {
+        $params[$paramsIndex++] = $route[$routeIndex++];
+    }
+    call_user_func($apiAction, $params);
 }
-
 ?>

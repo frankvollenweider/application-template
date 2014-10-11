@@ -1,40 +1,42 @@
 <?php
 
 
-define('BASE', dirname(__FILE__) . '/..');
+define('BASE', dirname(__FILE__) . '/../');
 define('CACHE', dirname(__FILE__) . '/');
 
 require dirname(__FILE__) . '/../../../application/library/bootstrap.php';
 
 // initialize
-$core = file_get_contents(BASE . '/js/core/jquery-1.11.1.min.js') . "\n";
-$core .= file_get_contents(BASE . '/js/core/terrific-2.0.2.min.js') . "\n";
+$core = file_get_contents(BASE . 'js/core/jquery-1.11.1.min.js') . "\n";
+$core .= file_get_contents(BASE . 'js/core/terrific-2.1.0.min.js') . "\n";
+$core .= file_get_contents(BASE . 'js/core/doT-1.0.1.min.js') . "\n";
+$core .= file_get_contents(BASE . 'js/core/core.js') . "\n";
 
 $output = '';
 
 // load libraries
-foreach (glob(BASE . '/js/libraries/*.js') as $entry) {
+foreach (glob(BASE . 'js/libraries/*.js') as $entry) {
     if (is_file($entry)) {
         $output .= file_get_contents($entry) . "\n";
     }
 }
 
 // load plugins
-foreach (glob(BASE . '/js/plugins/*.js') as $entry) {
+foreach (glob(BASE . 'js/plugins/*.js') as $entry) {
     if (is_file($entry)) {
         $output .= file_get_contents($entry) . "\n";
     }
 }
 
 // load connectors
-foreach (glob(BASE . '/js/connectors/*.js') as $entry) {
+foreach (glob(BASE . 'js/connectors/*.js') as $entry) {
     if (is_file($entry)) {
         $output .= file_get_contents($entry) . "\n";
     }
 }
 
 // load modules
-foreach (glob(APP . '/modules/*', GLOB_ONLYDIR) as $dir) {
+foreach (glob(APP . 'modules/*', GLOB_ONLYDIR) as $dir) {
     $module = basename($dir);
     $js = $dir . '/js/' . $module . '.js';
     if (is_file($js)) {

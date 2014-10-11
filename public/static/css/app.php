@@ -1,22 +1,22 @@
 <?php
 
-define('BASE', dirname(__FILE__) . '/..');
+define('BASE', dirname(__FILE__) . '/../');
 define('CACHE', dirname(__FILE__) . '/');
 
 require dirname(__FILE__) . '/../../../application/library/bootstrap.php';
 
 // load reset css
-$output = file_get_contents(BASE . '/css/core/reset.css') . "\n";
+$output = file_get_contents(BASE . 'css/core/reset.css') . "\n";
 
 // load plugin css
-foreach (glob(BASE . '/css/elements/*.css') as $entry) {
+foreach (glob(BASE . 'css/elements/*.css') as $entry) {
     if (is_file($entry)) {
         $output .= file_get_contents($entry) . "\n";
     }
 }
 
 // load module css including skins
-foreach (glob(APP . '/modules/*', GLOB_ONLYDIR) as $dir) {
+foreach (glob(APP . 'modules/*', GLOB_ONLYDIR) as $dir) {
     $module = basename($dir);
     $css = $dir . '/css/' . strtolower($module) . '.css';
     if (is_file($css)) {

@@ -1,16 +1,13 @@
 <?php
 
-// lock(); for non-public apis
-
-// Example API
-define('API_EXAMPLE_ACTION', 'example.action');
-
-switch ($action) {
-
-	case API_EXAMPLE_ACTION:
-		$parameter = $route[4];
-		header('Content-Type: application/json');
-		echo '{}';
-		break;
-
+function example_action($params) {
+    header('Content-Type: application/json');
+    $count = count($params);
+    $values = "";
+    $delimiter = "";
+    for ($i = 0; $i < $count; $i++) {
+        $values .= $delimiter . $params[$i];
+        $delimiter = ", ";
+    }
+    echo '{ "params": [' . $values . '] }';
 }
