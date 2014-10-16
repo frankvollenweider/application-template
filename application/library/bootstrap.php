@@ -12,8 +12,10 @@ define('APP', dirname(__FILE__) . '/../');
 define('LIBRARY', APP . 'library/');
 define('VIEWS', APP . 'views/');
 define('CONFIG', APP . 'config/');
-define('CACHE', APP . 'cache/');
 define('MODULES', APP . 'modules/');
+define('PUB', APP . '../public/');
+define('RESOURCE', PUB . 'static/');
+define('CACHE', RESOURCE . 'cache/');
 
 // load core function library
 require LIBRARY . 'core.php';
@@ -26,13 +28,17 @@ define('S', R . 'static/');
 require LIBRARY . 'db.php';
 global $databases;
 $dbnames = config('database.names');
-foreach ($dbnames as $dbname) {
-    $databases[$dbname] = new Database(
+foreach ($dbnames as $dbname => $aliases) {
+    $db = new Database(
         config('database.' . $dbname . '.server.host'),
         config('database.' . $dbname . '.server.username'),
         config('database.' . $dbname . '.server.password'),
-        config('database.' . $dbname . '.name')
+        $dbname,
+        config('database.' . $dbname . '.server.port')
     );
+    foreach ($aliases as $alias) {
+    	$databases[$alias] = $db;
+    }
 }
 
 global $cache;
@@ -77,5 +83,3 @@ date_default_timezone_set(config('timezone.default'));
 // register shutdown function
 register_shutdown_function('session_write_close');
 register_shutdown_function('shutdown');
-
-?>

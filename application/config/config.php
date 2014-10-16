@@ -7,9 +7,8 @@ $config['timezone.default'] = 'UTC';
 
 // Database
 $config['database.names'] = array(
-    'mysql'
+    'mysql' => array('db1')
 );
-$config['database.mysql.server.type'] = 'mysql';
 $config['database.mysql.server.host'] = 'localhost';
 $config['database.mysql.server.port'] = 3306;
 $config['database.mysql.server.username'] = '';
@@ -31,8 +30,12 @@ $config['security.user.provider'] = 'default';
 $config['security.authentication.provider'] = 'default';
 $config['security.authorization.provider'] = 'default';
 
+// Minify Resources
+$config['minify.css.enabled'] = true;
+$config['minify.js.enabled'] = true;
+
 // Cache
-$config['cache.css.enabled'] = false;
-$config['cache.js.enabled'] = false;
+$config['cache.css.enabled'] = true;
+$config['cache.js.enabled'] = true;
 
 ?>

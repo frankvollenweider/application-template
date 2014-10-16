@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php print S ?>js/app.<?php print config('cache.js.enabled') ? 'js' : 'php' ?>"></script>
+<script type="text/javascript" src="<?php print S ?><?php print config('cache.js.enabled') && is_file(CACHE . 'app.js') ? 'cache/app.js' : 'js/app.php' ?>"></script>
 <script type="text/javascript">
 (function($) {
     $(document).ready(function() {

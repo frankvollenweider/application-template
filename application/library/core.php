@@ -19,6 +19,10 @@ function config($var, $value = NULL) {
  * Perform application shutdown tasks.
  */
 function shutdown() {
+	global $databases;
+	foreach ($databases as $alias => $db) {
+		$db->close();
+	}
     global $start;
     //echo "\n<!-- " . round(microtime(true) - $start, 4) . "s -->";
 }
@@ -27,9 +31,9 @@ function shutdown() {
  * Returns the named database.
  * @param name Name of the database
  */
-function db($name) {
+function db($alias) {
 	global $databases;
-	return $databases[$name];
+	return $databases[$alias];
 }
 
 function json_receive() {
