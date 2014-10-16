@@ -15,6 +15,54 @@ function config($var, $value = NULL) {
     return isset($config[$var]) ? $config[$var] : $value;
 }
 
+function currentView() {
+    global $route;
+    if (empty($route[1])) { $route[1] = VIEW_INDEX; }
+    return $route[1];
+}
+
+function currentApi() {
+    if (currentView() === VIEW_API) {
+        global $route;
+        if (!empty($route[2])) {
+            return $route[2];
+        }
+    }
+    return NULL;
+}
+
+function currentApiAction() {
+    if (currentView() === VIEW_API) {
+        global $route;
+        if (!empty($route[3])) {
+            return $route[3];
+        }
+    }
+    return NULL;
+}
+
+function currentApiActionParams() {
+    global $route;
+    $params = array();
+    $routeIndex = 4;
+    $paramsIndex = 0;
+    while (isset($route[$routeIndex])) {
+        $params[$paramsIndex++] = $route[$routeIndex++];
+    }
+    return $params;
+}
+
+function currentViewParams() {
+    global $route;
+    $params = array();
+    $routeIndex = 2;
+    $paramsIndex = 0;
+    while (isset($route[$routeIndex])) {
+        $params[$paramsIndex++] = $route[$routeIndex++];
+    }
+    return $params;
+}
+
 /**
  * Perform application shutdown tasks.
  */
@@ -36,13 +84,13 @@ function db($alias) {
 	return $databases[$alias];
 }
 
-function json_receive() {
+function jsonReceive() {
     $request = json_decode(file_get_contents('php://input'));
     if (!$request) { die(); }
     return $request;
 }
 
-function json_send($data) {
+function jsonSend($data) {
     header('Content-Type: application/json');
     echo json_encode($data);
     exit(0);
@@ -53,7 +101,7 @@ function json_send($data) {
  * @param $path Path to beautify
  * @return resulting path
  */
-function simplify_path($path) {
+function simplifyPath($path) {
     // saves our current working directory to a variable
 	$oldCwd = getcwd();
     // change the directory to the one to convert

@@ -1,18 +1,12 @@
 <?php
 
-$apiName = isset($route[2]) ? $route[2] : "";
-$apiAction = isset($route[3]) ? $route[3] : "";
+$apiName = currentApi();
+$apiAction = currentApiAction();
 
 checkUserAllowedForApiAction($apiName, $apiAction);
-require LIBRARY . 'api/' . $apiName . '.php';
+require LIBRARY . VIEW_API . '/' . $apiName . '.php';
 
 if (is_callable($apiAction)) {
-    $params = array();
-    $routeIndex = 4;
-    $paramsIndex = 0;
-    while (isset($route[$routeIndex])) {
-        $params[$paramsIndex++] = $route[$routeIndex++];
-    }
+    $params = currentApiActionParams();
     call_user_func($apiAction, $params);
 }
-?>

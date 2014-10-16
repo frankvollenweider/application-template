@@ -17,11 +17,15 @@ define('PUB', APP . '../public/');
 define('RESOURCE', PUB . 'static/');
 define('CACHE', RESOURCE . 'cache/');
 
+// define base views
+define('VIEW_INDEX', 'index');
+define('VIEW_API', 'api');
+
 // load core function library
 require LIBRARY . 'core.php';
 
-// define additional constants
-define('R', config('application.baseurl'));
+// define urls
+define('R', config('application.url.base'));
 define('S', R . 'static/');
 
 // create database connection instances
