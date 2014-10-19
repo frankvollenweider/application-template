@@ -1,6 +1,4 @@
 <?php
-global $config;
-$config = array();
 
 // Timezone
 $config['timezone.default'] = 'UTC';

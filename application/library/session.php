@@ -1,21 +1,11 @@
 <?php
 
 /**
- * Clarify.
- * 
- * Copyright (C) 2012 Roger Dudler <roger.dudler@gmail.com>
- *
- * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
- */
-
-/**
  * Open a session
  * @param path - session save path
  * @param id - session id
  */
 function sess_open($path, $id) {
-    global $cache;
     return true;
 }
 
@@ -23,10 +13,10 @@ function sess_open($path, $id) {
  * Close a session
  */
 function sess_close() {
-	global $cache;
-	if (is_object($cache)) {
-	    $cache->close();
-	}
+    $cache = getCache();
+    if (is_object($cache)) {
+        $cache->close();
+    }
     return true;
 }
 
@@ -35,9 +25,8 @@ function sess_close() {
  * @param id session id
  */
 function sess_read($id) {
-	global $cache;
-    $cachedata = $cache->get('session_' . $id);
-	return $cachedata;
+    $cache = getCache();
+    return $cache->get('session_' . $id);
 }
 
 /**
@@ -46,21 +35,8 @@ function sess_read($id) {
  * @param data - session data
  */
 function sess_write($id, $data) {
-    global $cache;
-	$user_id = $_SESSION['user']['id'];
-    $cachedata = $cache->get('session_' . $id);
-	$cache->set('session_' . $id, $data, false);
-	$cache->set('user_online_' . $user_id, true, false);
-	$online = $cache->get('online');
-	if (!is_array($online)) {
-		$online = array($user_id => true);
-		$cache->set('online', $online);
-	} else {
-		if (!array_key_exists($user_id, $online)) {
-			$online[$user_id] = true;
-			$cache->set('online', $online);
-		}
-	}
+    $cache = getCache();
+    $cache->set('session_' . $id, $data, false);
 }
 
 /**
@@ -68,17 +44,8 @@ function sess_write($id, $data) {
  * @param id - session id
  */
 function sess_destroy($id) {
-	global $cache;
-	$user_id = $_SESSION['user']['id'];
-	$cache->delete('user_online_' . $user_id);
+    $cache = getCache();
     $cache->delete('session_' . $id);
-	$online = $cache->get('online');
-	if (is_array($online)) {
-		if (in_array($user_id, $online)) {
-			unset($online[$user_id]);
-			$cache->set('online', $online);
-		}
-	}
 }
 
 /**
@@ -86,7 +53,5 @@ function sess_destroy($id) {
  * @param maxlifetime - maximum session lifetime in seconds
  */
 function sess_gc($maxlifetime) {
-	
+    // NOOP
 }
-
-?>

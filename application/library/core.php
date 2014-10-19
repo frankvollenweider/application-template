@@ -9,10 +9,19 @@
 function config($var, $value = NULL) {
     global $config;
     if ($config == NULL) {
+        $config = array();
         require CONFIG . 'config.php';
         is_file(CONFIG . 'config-private.php') ? include(CONFIG . 'config-private.php') : NULL;
     }
     return isset($config[$var]) ? $config[$var] : $value;
+}
+
+/**
+ * Parse the request uri.
+ */
+function parseRequestUri($requestUri, $queryString) {
+    global $route;
+    $route = str_replace('?' . $queryString, '', explode('/', $requestUri));
 }
 
 function currentView() {
@@ -55,12 +64,21 @@ function currentApiActionParams() {
 function currentViewParams() {
     global $route;
     $params = array();
-    $routeIndex = 2;
+    $routeIndex = 6;
     $paramsIndex = 0;
     while (isset($route[$routeIndex])) {
         $params[$paramsIndex++] = $route[$routeIndex++];
     }
     return $params;
+}
+
+/**
+ * Perform application startup tasks.
+ */
+function startup() {
+    // initialize benchmarking
+    //global $start;
+    //$start = microtime(true);
 }
 
 /**
@@ -71,8 +89,33 @@ function shutdown() {
 	foreach ($databases as $alias => $db) {
 		$db->close();
 	}
-    global $start;
+    //global $start;
     //echo "\n<!-- " . round(microtime(true) - $start, 4) . "s -->";
+}
+
+function initializeCaching() {
+    global $cache;
+    if (class_exists('Memcache')) {
+        $cache = new Memcache();
+        $cache->connect(config('memcached.server.name'), config('memcached.server.port'));
+//         require LIBRARY . 'session.php';
+//         // set session save handler
+//         session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
+    } else {
+        require LIBRARY . 'cache/sessioncache.php';
+        $cache = new SessionCache();
+    }
+}
+
+function getCache() {
+    global $cache;
+    return $cache;
+}
+
+function initializeDatabases() {
+    require LIBRARY . 'db.php';
+    global $databases;
+    $databases = array();
 }
 
 /**
@@ -81,6 +124,39 @@ function shutdown() {
  */
 function db($alias) {
 	global $databases;
+	if (!isset($databases[$alias])) {
+	    $dbnames = config('database.names');
+	    if (!isset($dbnames)) {
+	        $databases[$alias] = NULL;
+	    } else {
+	        $db = NULL;
+	        $dbAliases = NULL;
+	        foreach ($dbnames as $dbname => $aliases) {
+	            if (!empty($db)) {
+	                break;
+	            }
+	            foreach ($aliases as $tmpAlias) {
+	                if ($tmpAlias === $alias) {
+	                    $db = new Database(
+	                        config('database.' . $dbname . '.server.host'),
+	                        config('database.' . $dbname . '.server.username'),
+	                        config('database.' . $dbname . '.server.password'),
+	                        $dbname,
+	                        config('database.' . $dbname . '.server.port')
+	                    );
+	                    $dbAliases = $aliases;
+	                    break;
+	                }
+	            }
+	        }
+	        if (empty($dbAliases)) {
+	            $dbAliases = array($alias);
+	        }
+	        foreach ($dbAliases as $tmpAlias) {
+	            $databases[$tmpAlias] = $db;
+	        }
+	    }
+	}
 	return $databases[$alias];
 }
 

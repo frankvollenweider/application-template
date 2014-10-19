@@ -3,12 +3,11 @@
 // start session
 session_start();
 
-// parse request uri
-global $route;
-$route = str_replace('?' . $_SERVER['QUERY_STRING'], '', explode('/', $_SERVER['REQUEST_URI']));
-
 // application bootstrap
 require dirname(__FILE__) . '/../application/library/bootstrap.php';
+
+// parse request uri
+parseRequestUri($_SERVER['REQUEST_URI'], $_SERVER['QUERY_STRING']);
 
 // view routing
 $viewName = currentView();

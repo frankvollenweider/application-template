@@ -1,9 +1,5 @@
 <?php
 
-// initialize benchmarking
-global $start;
-$start = microtime(true);
-
 // configure error reporting level
 error_reporting(E_ALL);
 
@@ -17,45 +13,25 @@ define('PUB', APP . '../public/');
 define('RESOURCE', PUB . 'static/');
 define('CACHE', RESOURCE . 'cache/');
 
+// load core function library
+require LIBRARY . 'core.php';
+
+// perform startup
+startup();
+
 // define base views
 define('VIEW_INDEX', 'index');
 define('VIEW_API', 'api');
-
-// load core function library
-require LIBRARY . 'core.php';
 
 // define urls
 define('R', config('application.url.base'));
 define('S', R . 'static/');
 
-// create database connection instances
-require LIBRARY . 'db.php';
-global $databases;
-$dbnames = config('database.names');
-foreach ($dbnames as $dbname => $aliases) {
-    $db = new Database(
-        config('database.' . $dbname . '.server.host'),
-        config('database.' . $dbname . '.server.username'),
-        config('database.' . $dbname . '.server.password'),
-        $dbname,
-        config('database.' . $dbname . '.server.port')
-    );
-    foreach ($aliases as $alias) {
-    	$databases[$alias] = $db;
-    }
-}
+// initialize databases
+initializeDatabases();
 
-global $cache;
-if (class_exists('Memcache')) {
-    $cache = new Memcache();
-    $cache->connect(config('memcached.server.name'), config('memcached.server.port'));
-    require LIBRARY . 'session.php';
-    // set session save handler
-    session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
-} else {
-    require LIBRARY . 'cache.php';
-    $cache = new Cache();
-}
+// initialize caching
+initializeCaching();
 
 // load user library
 $userProvider = config('security.user.provider');
