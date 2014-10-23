@@ -3,10 +3,13 @@
 require dirname(__FILE__) . '/../../../application/library/bootstrap.php';
 
 // load reset css
-$output = file_get_contents(RESOURCE . 'css/core/reset.css') . "\n";
+$output = file_get_contents(RESOURCE . 'css/core/html5reset.css') . "\n";
+
+// load clearfix css
+$output .= file_get_contents(RESOURCE . 'css/core/clearfix.css') . "\n";
 
 // load plugin css
-foreach (glob(RESOURCE . 'css/elements/*.css') as $entry) {
+foreach (glob(RESOURCE . 'css/elements/*.less') as $entry) {
     if (is_file($entry)) {
         $output .= file_get_contents($entry) . "\n";
     }
@@ -15,7 +18,7 @@ foreach (glob(RESOURCE . 'css/elements/*.css') as $entry) {
 // load module css including skins
 foreach (glob(MODULES . '*', GLOB_ONLYDIR) as $dir) {
     $module = basename($dir);
-    $css = $dir . '/css/' . strtolower($module) . '.css';
+    $css = $dir . '/css/' . strtolower($module) . '.less';
     if (is_file($css)) {
         $output .= file_get_contents($css) . "\n";
     }

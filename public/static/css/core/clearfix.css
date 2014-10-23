@@ -1,0 +1,7 @@
+// clear fix
+.row:after,
+.cf:after {
+    content: "";
+    display: table;
+    clear: both;
+}
