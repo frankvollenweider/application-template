@@ -26,6 +26,11 @@ foreach (glob(MODULES . '*', GLOB_ONLYDIR) as $dir) {
     }
 }
 
+// compile less
+require LIBRARY . 'thirdparty/lessphp/lessc.inc.php';
+$less = new lessc();
+$output = $less->compile($output);
+
 // minify the css if required
 if (config('minify.css.enabled')) {
     require LIBRARY . 'thirdparty/cssmin/cssmin.php';
