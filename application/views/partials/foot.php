@@ -1,3 +1,4 @@
+<div id="ajax-loader" class="ajax-loader"></div>
 <script type="text/javascript" src="<?php print S ?><?php print config('cache.js.enabled') && is_file(CACHE . 'app.js') ? 'cache/app.js' : 'js/app.php' ?>"></script>
 <script type="text/javascript">
 (function($) {

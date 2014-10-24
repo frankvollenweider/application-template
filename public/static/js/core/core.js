@@ -1,4 +1,5 @@
 (function() {
+
     "use strict";
 
     $(document).ajaxSend(function() {
@@ -7,6 +8,14 @@
 
     $(document).ajaxComplete(function() {
         $('#ajax-loader').hide();
+    });
+
+    $(document).mouseup(function(e) {
+        var container = $('.popup');
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide();
+            e.stopPropagation();
+        }
     });
 
 }());
