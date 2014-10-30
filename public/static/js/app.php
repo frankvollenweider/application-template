@@ -40,7 +40,7 @@ foreach (glob(RESOURCE . 'js/connectors/*.js') as $entry) {
 // load modules
 foreach (glob(MODULES . '*', GLOB_ONLYDIR) as $dir) {
     $module = basename($dir);
-    $js = $dir . '/js/' . $module . '.js';
+    $js = $dir . '/js/' . strtolower($module) . '.js';
     if (is_file($js)) {
         $output .= file_get_contents($js) . "\n";
     }
