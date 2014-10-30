@@ -233,6 +233,20 @@ function formatTimeToPersist($timestring) {
     return null;
 }
 
+function formatAmountToDisplay($amount) {
+    if (!empty($amount)) {
+        return number_format($amount, 2, ".", "'");
+    }
+    return number_format(0, 2, ".", "'");
+}
+
+function formatNumberToDisplay($number) {
+    if (!empty($number)) {
+        return number_format($number, 0, ".", "'");
+    }
+    return number_format(0, 0, ".", "'");
+}
+
 function doLog($message) {
     error_log($message);
 }
