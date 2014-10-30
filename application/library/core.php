@@ -85,10 +85,10 @@ function startup() {
  * Perform application shutdown tasks.
  */
 function shutdown() {
-	global $databases;
-	foreach ($databases as $alias => $db) {
-		$db->close();
-	}
+    global $databases;
+    foreach ($databases as $alias => $db) {
+        $db->close();
+    }
     //global $start;
     //echo "\n<!-- " . round(microtime(true) - $start, 4) . "s -->";
 }
@@ -123,41 +123,41 @@ function initializeDatabases() {
  * @param name Name of the database
  */
 function db($alias) {
-	global $databases;
-	if (!isset($databases[$alias])) {
-	    $dbnames = config('database.names');
-	    if (!isset($dbnames)) {
-	        $databases[$alias] = NULL;
-	    } else {
-	        $db = NULL;
-	        $dbAliases = NULL;
-	        foreach ($dbnames as $dbname => $aliases) {
-	            if (!empty($db)) {
-	                break;
-	            }
-	            foreach ($aliases as $tmpAlias) {
-	                if ($tmpAlias === $alias) {
-	                    $db = new Database(
-	                        config('database.' . $dbname . '.server.host'),
-	                        config('database.' . $dbname . '.server.username'),
-	                        config('database.' . $dbname . '.server.password'),
-	                        $dbname,
-	                        config('database.' . $dbname . '.server.port')
-	                    );
-	                    $dbAliases = $aliases;
-	                    break;
-	                }
-	            }
-	        }
-	        if (empty($dbAliases)) {
-	            $dbAliases = array($alias);
-	        }
-	        foreach ($dbAliases as $tmpAlias) {
-	            $databases[$tmpAlias] = $db;
-	        }
-	    }
-	}
-	return $databases[$alias];
+    global $databases;
+    if (!isset($databases[$alias])) {
+        $dbnames = config('database.names');
+        if (!isset($dbnames)) {
+            $databases[$alias] = NULL;
+        } else {
+            $db = NULL;
+            $dbAliases = NULL;
+            foreach ($dbnames as $dbname => $aliases) {
+                if (!empty($db)) {
+                    break;
+                }
+                foreach ($aliases as $tmpAlias) {
+                    if ($tmpAlias === $alias) {
+                        $db = new Database(
+                            config('database.' . $dbname . '.server.host'),
+                            config('database.' . $dbname . '.server.username'),
+                            config('database.' . $dbname . '.server.password'),
+                            $dbname,
+                            config('database.' . $dbname . '.server.port')
+                        );
+                        $dbAliases = $aliases;
+                        break;
+                    }
+                }
+            }
+            if (empty($dbAliases)) {
+                $dbAliases = array($alias);
+            }
+            foreach ($dbAliases as $tmpAlias) {
+                $databases[$tmpAlias] = $db;
+            }
+        }
+    }
+    return $databases[$alias];
 }
 
 function jsonReceive() {
@@ -179,18 +179,30 @@ function jsonSend($data) {
  */
 function simplifyPath($path) {
     // saves our current working directory to a variable
-	$oldCwd = getcwd();
+    $oldCwd = getcwd();
     // change the directory to the one to convert
     // $path is the directory to convert (clean up), handed over to the function as a string
-	chdir($path);
-	$newCwd = str_replace('\\', '/', getcwd());
+    chdir($path);
+    $newCwd = str_replace('\\', '/', getcwd());
     // change the cwd back to the old value to not interfere with the script
-	chdir($oldCwd);
-	return $newCwd;
+    chdir($oldCwd);
+    return $newCwd;
 }
 
 function notEmptyValueOrNull($value) {
     return empty($value) ? null : trim($value);
+}
+
+function formatEmptyValueOrNullToDisplay($value) {
+    return trim($value);
+}
+
+function formatEmptyValueOrNullToPersist($value) {
+    $value = trim($value);
+    if ($value === "") {
+        return null;
+    }
+    return $value;
 }
 
 function formatDateToDisplay($datestring) {

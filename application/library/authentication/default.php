@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * Returns, whether the current user is authenticated or not
@@ -26,5 +26,3 @@ function lock() {
         }
     }
 }
-
-?>
